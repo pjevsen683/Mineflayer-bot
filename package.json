@@ -1,0 +1,17 @@
+{
+  "name": "minecraft-worker-bots",
+  "version": "1.0.0",
+  "description": "Minecraft worker bots with task queue system",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "mineflayer": "^4.20.1",
+    "mineflayer-pathfinder": "^2.4.3"
+  },
+  "keywords": ["minecraft", "bot", "mineflayer"],
+  "author": "",
+  "license": "MIT"
+}
