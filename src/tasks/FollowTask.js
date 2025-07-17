@@ -28,7 +28,7 @@ class FollowTask extends BaseTask {
         }
         throw error;
       }
-    }, 1000); // Check every second
+    }, 2000); // Check every 2 seconds to reduce pathfinding conflicts
 
     // Keep the task running until stopped
     return new Promise((resolve, reject) => {
@@ -61,10 +61,16 @@ class FollowTask extends BaseTask {
         this.bot.pathfinder.setMovements(defaultMove);
 
         const goal = new goals.GoalNear(targetPos.x, targetPos.y, targetPos.z, this.distance);
-        await this.bot.pathfinder.goto(goal);
+        
+        // Only start new pathfinding if not already moving
+        if (!this.bot.pathfinder.isMoving()) {
+          await this.bot.pathfinder.goto(goal);
+        }
       } catch (error) {
-        // If pathfinding fails, try simple movement
-        console.log(`Pathfinding failed for ${this.bot.username}: ${error.message}`);
+        // If pathfinding fails, don't log every error to avoid spam
+        if (!error.message.includes('goal was changed')) {
+          console.log(`Pathfinding failed for ${this.bot.username}: ${error.message}`);
+        }
         // Don't throw error here, just continue trying
       }
     }
@@ -120,7 +126,7 @@ class FollowTask extends BaseTask {
             this.rejectFollow(error);
           }
         }
-      }, 1000);
+      }, 2000); // Check every 2 seconds to reduce pathfinding conflicts
     }
   }
 }

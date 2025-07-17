@@ -48,7 +48,9 @@ class TaskManager {
         this.onTaskComplete();
       })
       .catch((error) => {
-        this.bot.chat(`Task failed: ${this.currentTask.name} - ${error.message}`);
+        if (this.currentTask){
+          this.bot.chat(`Task failed: ${this.currentTask.name} - ${error.message}`);
+        }
         this.onTaskComplete();
       });
   }

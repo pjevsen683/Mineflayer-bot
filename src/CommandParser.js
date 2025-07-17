@@ -1,13 +1,21 @@
 const FollowTask = require('./tasks/FollowTask');
+const DepositTask = require('./tasks/DepositTask');
+const ComeTask = require('./tasks/ComeTask');
+const FellTask = require('./tasks/FellTask');
 
 class CommandParser {
-  constructor(bot, taskManager) {
+  constructor(bot, taskManager, botName) {
     this.bot = bot;
     this.taskManager = taskManager;
-    this.botName = bot.username;
+    this.botName = botName || bot.username;
   }
 
   parseMessage(username, message) {
+    // Check if message and botName are valid
+    if (!message || !this.botName) {
+      return false;
+    }
+    
     // Make message case-insensitive
     const lowerMessage = message.toLowerCase().trim();
     
@@ -52,9 +60,14 @@ class CommandParser {
       case 'follow':
         return this.createFollowTask(parts, username);
       
-      // Future tasks can be added here
-      // case 'fell':
-      //   return this.createFellTask(parts, username);
+      case 'deposit':
+        return this.createDepositTask(parts, username);
+      
+      case 'come':
+        return this.createComeTask(parts, username);
+      
+      case 'fell':
+        return this.createFellTask(parts, username);
       
       default:
         return null;
@@ -80,6 +93,46 @@ class CommandParser {
     }
 
     return new FollowTask(this.bot, targetPlayer);
+  }
+
+  createDepositTask(parts, username) {
+    // No parameters needed for deposit task
+    return new DepositTask(this.bot);
+  }
+
+  createComeTask(parts, username) {
+
+    let targetPlayer;
+    if (parts.length < 2){
+      targetPlayer = username;
+    }else{
+      if (parts[1] === 'me') {
+        targetPlayer = username;
+      } else {
+        targetPlayer = parts[1];
+      }
+    }
+
+    // Check if target player exists
+    const target = this.bot.players[targetPlayer];
+    if (!target || !target.entity) {
+      throw new Error(`I cannot see ${targetPlayer}`);
+    }
+
+    return new ComeTask(this.bot, targetPlayer);
+  }
+
+  createFellTask(parts, username) {
+    if (parts.length < 2) {
+      throw new Error('Fell command requires a radius. Usage: fell <radius>');
+    }
+
+    const radius = parseInt(parts[1], 10);
+    if (isNaN(radius) || radius <= 0) {
+      throw new Error('Radius must be a positive number.');
+    }
+
+    return new FellTask(this.bot, radius);
   }
 
   handleSpecialCommands(command, username) {
@@ -112,6 +165,10 @@ class CommandParser {
     const helpMessage = `Available commands:
 • follow <player> - Follow a specific player
 • follow me - Follow the command sender
+• come <player> - Go to a specific player
+• come me - Go to the command sender
+• deposit - Deposit all items to nearest chest
+• fell <radius> - Fell trees in specified radius from nearest chest
 • stop - Stop current task
 • clear - Clear all tasks
 • tasks - List current tasks

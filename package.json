@@ -11,7 +11,21 @@
     "mineflayer": "^4.20.1",
     "mineflayer-pathfinder": "^2.4.3"
   },
-  "keywords": ["minecraft", "bot", "mineflayer"],
+  "keywords": [
+    "minecraft",
+    "bot",
+    "mineflayer"
+  ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pjevsen683/Mineflayer-bot.git"
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/pjevsen683/Mineflayer-bot/issues"
+  },
+  "homepage": "https://github.com/pjevsen683/Mineflayer-bot#readme"
 }
