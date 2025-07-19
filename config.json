@@ -1,0 +1,17 @@
+{
+  "server": {
+    "host": "10.0.1.198",
+    "port": 25565,
+    "version": "1.21"
+  },
+  "bots": {
+    "count": 1,
+    "states": {
+      "worker1": {
+        "taskQueue": [],
+        "currentTask": null,
+        "pausedTask": null
+      }
+    }
+  }
+}
